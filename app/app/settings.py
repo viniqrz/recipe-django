@@ -86,7 +86,7 @@ DATABASES = {
     }
 }
 
-if 'test' in sys.argv or 'test\_coverage' in sys.argv:  #Covers regular testing and django-coverage
+if 'test' in sys.argv or 'test\_coverage' in sys.argv:  # Covers regular testing and django-coverage
     DATABASES['default']['ENGINE'] = 'django.db.backends.sqlite3'
     DATABASES['default']['NAME'] = ':memory:'
 
@@ -133,3 +133,5 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'core.User'
