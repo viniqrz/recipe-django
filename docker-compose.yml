@@ -7,10 +7,19 @@ services:
       - dev-db-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-    environment:
-      - POSTGRES_USER=devuser
-      - POSTGRES_PASSWORD=changeme
-      - POSTGRES_DB=devdb
+    env_file:
+      - .env
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "sh",
+          "-c",
+          "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   app:
     container_name: django_api_dev
@@ -22,16 +31,13 @@ services:
     volumes:
       - ./app:/app
     command: >
-      sh -c "python manage.py wait_for_db &&
-      python manage.py migrate &&
+      sh -c "python manage.py migrate &&
       python manage.py runserver 0.0.0.0:8000"
     depends_on:
-      - db
-    environment:
-      - DB_HOST=db
-      - DB_NAME=devdb
-      - DB_USER=devuser
-      - DB_PASS=changeme
+      db:
+        condition: service_healthy
+    env_file:
+      .env
 
 volumes:
   dev-db-data:

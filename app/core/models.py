@@ -63,5 +63,13 @@ class Tag(models.Model):
 
     name = models.CharField(max_length=255)
 
+    class Status(models.Choices):
+        ACTIVE = 'active'
+        INACTIVE = 'inactive'
+        DRAFT = 'draft'
+
+    status = models.CharField(
+        max_length=16, choices=Status.choices, default=Status.ACTIVE)
+
     def __str__(self):
         return self.name
